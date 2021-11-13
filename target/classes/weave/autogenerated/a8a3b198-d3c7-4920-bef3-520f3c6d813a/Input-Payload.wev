@@ -1,0 +1,14 @@
+%dw 2.0
+
+type auto_a8a3b198_d3c7_4920_bef3_520f3c6d813a_Input_Payload = {|
+  movieName: String, 
+  language: String, 
+  format: String, 
+  date: String, 
+  timeSlot: String, 
+  seats: String, 
+  price: Any, 
+  totalAmount: Any, 
+  discount: Any
+|}
+

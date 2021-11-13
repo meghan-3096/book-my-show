@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://localhost:8081/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="BookMyShowOrder" targetNamespace="http://localhost:8081/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://localhost:8081/">
+      <xsd:element name="PostOrder">
+        <xsd:complexType>
+          <xsd:sequence>
+
+          	<xsd:element name="Order" type="tns:OrderType"></xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="PostOrderResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+
+          	<xsd:element name="Ticket" type="tns:TicketType"></xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    
+      <xsd:complexType name="OrderType">
+      	<xsd:sequence>
+      		<xsd:element name="movieName" type="xsd:string"></xsd:element>
+      		<xsd:element name="language" type="xsd:string"></xsd:element>
+      		<xsd:element name="format" type="xsd:string"></xsd:element>
+      		<xsd:element name="bookingDate" type="xsd:string"></xsd:element>
+      		<xsd:element name="seats" type="xsd:string"></xsd:element>
+      		<xsd:element name="timeSlot" type="xsd:string"></xsd:element>
+      		<xsd:element name="price" type="xsd:string"></xsd:element>
+      	</xsd:sequence>
+      </xsd:complexType>
+    
+      <xsd:complexType name="TicketType">
+      	<xsd:sequence>
+      		<xsd:element name="orderId" type="xsd:int"></xsd:element>
+      		<xsd:element name="movieName" type="xsd:string"></xsd:element>
+      		<xsd:element name="language" type="xsd:string"></xsd:element>
+      		<xsd:element name="format" type="xsd:string"></xsd:element>
+      		<xsd:element name="timeSlot" type="xsd:string"></xsd:element>
+      		<xsd:element name="seats" type="xsd:string"></xsd:element>
+      		<xsd:element name="amountPaid" type="xsd:string"></xsd:element>
+      	</xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="GetOrderByID">
+      	<xsd:complexType>
+      		<xsd:sequence>
+
+      			<xsd:element name="orderId" type="xsd:int"></xsd:element>
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetOrderByIDResponse">
+      	<xsd:complexType>
+
+      		<xsd:sequence>
+      			<xsd:element name="Ticket" type="tns:TicketType"></xsd:element>
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
+      <xsd:element name="DeleteOrder">
+      	<xsd:complexType>
+      		<xsd:sequence>
+
+      			<xsd:element name="orderID" type="xsd:int"></xsd:element>
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
+      <xsd:element name="DeleteOrderResponse">
+      	<xsd:complexType>
+      		<xsd:sequence>
+
+      			<xsd:element name="Message" type="xsd:string"></xsd:element>
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="PostOrderRequest">
+    <wsdl:part element="tns:PostOrder" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="PostOrderResponse">
+    <wsdl:part element="tns:PostOrderResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="GetOrderByIDRequest">
+  	<wsdl:part name="parameters" element="tns:GetOrderByID"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetOrderByIDResponse">
+  	<wsdl:part name="parameters" element="tns:GetOrderByIDResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="DeleteOrderRequest">
+  	<wsdl:part name="parameters" element="tns:DeleteOrder"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="DeleteOrderResponse">
+  	<wsdl:part name="parameters" element="tns:DeleteOrderResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="BookMyShowOrderPortType">
+    <wsdl:operation name="PostOrder">
+      <wsdl:input message="tns:PostOrderRequest"/>
+      <wsdl:output message="tns:PostOrderResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderByID">
+    	<wsdl:input message="tns:GetOrderByIDRequest"></wsdl:input>
+    	<wsdl:output message="tns:GetOrderByIDResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteOrder">
+    	<wsdl:input message="tns:DeleteOrderRequest"></wsdl:input>
+    	<wsdl:output message="tns:DeleteOrderResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BookMyShowOrderSOAP"
+  	type="tns:BookMyShowOrderPortType">
+
+  	<soap:binding style="document"
+  		transport="http://schemas.xmlsoap.org/soap/http" />
+  	<wsdl:operation name="PostOrder">
+
+  		<soap:operation soapAction="http://localhost:8081/PostOrder" />
+  		<wsdl:input>
+
+  			<soap:body use="literal" />
+  		</wsdl:input>
+  		<wsdl:output>
+
+  			<soap:body use="literal" />
+  		</wsdl:output>
+  	</wsdl:operation>
+  	<wsdl:operation name="GetOrderByID">
+
+  		<soap:operation
+  			soapAction="http://localhost:8081/GetOrderByID" />
+  		<wsdl:input>
+
+  			<soap:body use="literal" />
+  		</wsdl:input>
+  		<wsdl:output>
+
+  			<soap:body use="literal" />
+  		</wsdl:output>
+  	</wsdl:operation>
+  	<wsdl:operation name="DeleteOrder">
+  		<soap:operation
+  			soapAction="http://localhost:8081/DeleteOrder" />
+  		<wsdl:input>
+  			<soap:body use="literal" />
+  		</wsdl:input>
+  		<wsdl:output>
+  			<soap:body use="literal" />
+  		</wsdl:output>
+  	</wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="BookMyShowOrderService">
+    <wsdl:port binding="tns:BookMyShowOrderSOAP" name="BookMyShowOrderSOAPPort">
+      <soap:address location="http://localhost:8081/bookmovie"/>
+    </wsdl:port>
+    <wsdl:port name="GetOrderByID" binding="tns:BookMyShowOrderSOAP">
+    	<soap:address location="http://localhost:8081/bookmovie" />
+    </wsdl:port>    <wsdl:port name="DeleteMyOrder" binding="tns:BookMyShowOrderSOAP">    	<soap:address location="http://localhost:8081/bookmovie" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

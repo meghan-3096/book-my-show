@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>3dbeba89-de63-4df3-8394-4ed99bf7655e</groupId>
+  <artifactId>movie-api</artifactId>
+  <version>1.0.3</version>
+  <name>Movie API</name>
+  <properties>
+    <classifier>raml</classifier>
+    <main>movie-api.raml</main>
+    <originalFormatVersion>1.0</originalFormatVersion>
+    <apiVersion>v1</apiVersion>
+    <projectId>dd8f93f6-ba62-4a7d-8199-22951ebb92bb</projectId>
+    <branchId>master</branchId>
+    <commitId>0c5f0346429d7977a649d87fbb9d2ccd068774b5</commitId>
+    <type>rest-api</type>
+    <mainFile>movie-api.raml</mainFile>
+  </properties>
+  <repositories>
+    <repository>
+      <id>anypoint-exchange</id>
+      <url>https://maven.anypoint.mulesoft.com/api/v3/maven</url>
+    </repository>
+  </repositories>
+</project>

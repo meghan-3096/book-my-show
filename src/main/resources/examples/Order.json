@@ -1,0 +1,9 @@
+{
+    "movieName": "Dune",
+    "language": "English",
+    "format": "IMAX 3D",
+    "date": "2021-11-01",
+    "timeSlot": "Afternoon",
+    "seats": 4,
+    "price": 600
+}

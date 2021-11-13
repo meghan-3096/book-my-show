@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:apikit-soap="http://www.mulesoft.org/schema/mule/apikit-soap" xmlns:batch="http://www.mulesoft.org/schema/mule/ee/batch" xmlns:bti="http://www.mulesoft.org/schema/mule/ee/bti/" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:http-policy="http://www.mulesoft.org/schema/mule/mule-http" xmlns:kryo="http://www.mulesoft.org/schema/mule/kryo" xmlns:module="http://www.mulesoft.org/schema/mule/module" xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/apikit-soap http://www.mulesoft.org/schema/mule/apikit-soap/current/mule-apikit-soap.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+    <apikit-soap:config name="soapkit-config" port="BookMyShowOrderSOAPPort" service="BookMyShowOrderService" wsdlLocation="BookMyShowOrder.wsdl" soapVersion="SOAP11"/>
+    <flow name="api-main">
+        <http:listener config-ref="HTTP_Listener_config" path="/BookMyShowOrderService/BookMyShowOrderSOAPPort">
+            <http:response statusCode="#[attributes.additionalTransportData.statusCode default 200]">
+                <http:headers>
+                    <![CDATA[#[attributes.protocolHeaders default {}]]]>
+                </http:headers>
+            </http:response>
+            <http:error-response statusCode="#[attributes.additionalTransportData.statusCode default 500]">
+                <http:body>
+                    <![CDATA[#[payload]]]>
+                </http:body>
+                <http:headers>
+                    <![CDATA[#[attributes.protocolHeaders default {}]]]>
+                </http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit-soap:router config-ref="soapkit-config">
+            <apikit-soap:attributes><![CDATA[#[%dw 2.0
+              output application/java
+              ---
+              {
+                  headers: attributes.headers,
+                  method: attributes.method,
+                  queryString: attributes.queryString
+            }]]]></apikit-soap:attributes>
+        </apikit-soap:router>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="3c64ea0f-523a-4598-b5ea-1cc37cbe631d" type="APIKIT-SOAP:FAULT">
+				<logger level="INFO" doc:name="Logger" doc:id="9f630aec-3dee-4a3a-96c4-5861ca8bd783" message="#[{&#10;	message: error.description&#10;}]"/>
+			</on-error-propagate>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="acf87b45-87c5-4d80-827c-39c2139a5571" type="APIKIT-SOAP:ROUTER">
+				<logger level="INFO" doc:name="Logger" doc:id="9ac12873-6639-4384-943c-2f571777a212" message="#[{&#10;	message: error.description&#10;}]"/>
+			</on-error-propagate>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="4d6cb86d-a43d-46f8-93dd-d93329c9fb41" type="ANY">
+				<logger level="INFO" doc:name="Logger" doc:id="a4b698f9-2d32-4a39-8447-2af9b5eb58ef" message="#[{&#10;	message: error.description&#10;}]"/>
+			</on-error-continue>
+		</error-handler>
+    </flow>
+    <flow name="PostOrder:\soapkit-config">
+        <ee:transform>
+            <ee:message>
+                <ee:set-payload>
+                    <![CDATA[%dw 2.0
+output application/json
+ns ns0 http://localhost:8081/
+---
+{
+	movieName: payload.body.ns0#PostOrder.Order.movieName default "",
+	language: payload.body.ns0#PostOrder.Order.language default "",
+	format: payload.body.ns0#PostOrder.Order.format default "",
+	date: payload.body.ns0#PostOrder.Order.bookingDate default "",
+	timeSlot: payload.body.ns0#PostOrder.Order.timeSlot default "",
+	seats: payload.body.ns0#PostOrder.Order.seats default "",
+	price: payload.body.ns0#PostOrder.Order.price default ""
+}]]>
+                </ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <scatter-gather doc:id="a5231815-3650-49ec-bf6b-91a970e06853" doc:name="Scatter-Gather">
+            <route>
+                <flow-ref doc:id="4d05619e-0085-41f3-ad54-eacdff9c7474" doc:name="Get Order Price" name="getOrderPrice"/>
+            </route>
+            <route>
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload>
+                            <![CDATA[%dw 2.0
+output application/json
+---
+payload]]>
+                        </ee:set-payload>
+                    </ee:message>
+                </ee:transform>
+            </route>
+			<route >
+				<try doc:name="Try" doc:id="3e4b3533-7331-43b6-9270-f8a16ecda681">
+					<flow-ref doc:id="3bcdc9e4-0fa7-4eb1-ac01-0bd290236c34" doc:name="Update Seats" name="updateSeats" />
+					<logger doc:id="9d31bba5-3418-4ccf-935e-6b6c06aecf5c" doc:name="Logger" level="INFO" message="Seat Counts are updated" />
+					<error-handler>
+						<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="2bc45446-e688-419c-9cb4-60072e635a63" type="ANY">
+							<set-payload value="#[{&#10;	message: error.description&#10;}]" doc:name="Set Payload" doc:id="5114e055-e996-40a1-af5e-25b9ae1e78a0" />
+							<logger level="INFO" doc:name="Logger" doc:id="9f902fd6-747e-42c3-82ad-993884612244" message="#[{&#10;	message: error.description&#10;}]"/>
+						</on-error-propagate>
+					</error-handler>
+				</try>
+			</route>
+        </scatter-gather>
+        <ee:transform>
+            <ee:message>
+                <ee:set-payload>
+                    <![CDATA[%dw 2.0
+output application/json
+---
+{
+	movieName: payload."1".payload.movieName,
+	language: payload."1".payload.language,
+	format: payload."1".payload.format,
+	date: payload."1".payload.date,
+	timeSlot: payload."1".payload.timeSlot,
+	seats:payload."1".payload.seats,
+	price: payload."0".payload.price,
+	totalAmount: payload."0".payload.totalAmount,
+	discount: payload."0".payload.discount
+}]]>
+                </ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <scatter-gather doc:id="2eee954f-be98-43ab-8a75-effec1d9c16f" doc:name="Scatter-Gather">
+            <route>
+                <try doc:name="Try" doc:id="0ccc1041-3d07-48aa-aa84-55d67fcc2e03" >
+					<db:insert config-ref="Database_Config" doc:id="355938fe-ed15-4275-881f-e43a4741261e" doc:name="Insert">
+                    <db:sql>INSERT INTO orders(movieName,languages,formats,bookingDate,timeSlot,seats,amountPaid,discount,paymentStatus,totalPrice) VALUES (:movieName,:language,:format,:bookingDate,:timeSlot,:seats,:amountPaid,:discount,:paymentStatus,:totalPrice)</db:sql>
+                    <db:input-parameters>#[{
+	'movieName': payload.movieName,
+	'language': payload.language,
+	'format': payload.format,
+	'bookingDate': payload.date,
+	'timeSlot': payload.timeSlot,
+	'seats': payload.seats,
+	'amountPaid': payload.price,
+	'paymentStatus': 'PAID',
+	'discount': payload.discount,
+	'totalPrice': payload.price
+}]</db:input-parameters>
+                </db:insert>
+					<error-handler >
+						<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="444977e0-7308-4c00-9003-e94920a54f97" type="DB:BAD_SQL_SYNTAX, DB:CONNECTIVITY, DB:QUERY_EXECUTION, DB:RETRY_EXHAUSTED">
+							<set-payload value="Something went wrong. Please contact support team." doc:name="Set Payload" doc:id="9610ce09-9c5f-4a8a-abe0-5eef233e9ce1" />
+							<ee:transform doc:name="Transform Message" doc:id="733f4af9-7253-4213-857e-61a70200a120" >
+								<ee:message >
+									<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: payload
+}
+]]></ee:set-payload>
+								</ee:message>
+							</ee:transform>
+							<logger level="INFO" doc:name="Logger" doc:id="87161f04-493c-417e-83e5-babbe85244bb" message="#[{&#10;	message: error.description&#10;}]"/>
+						</on-error-propagate>
+						<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="6a37cf94-f309-447c-aa77-da3b06821276" type="ANY">
+							<logger level="INFO" doc:name="Logger" doc:id="8836a217-15ad-4da8-80b6-4dd3fa4b93df" message="#[{&#10;	message: error.description&#10;}]"/>
+						</on-error-continue>
+					</error-handler>
+				</try>
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload>
+                            <![CDATA[%dw 2.0
+output application/json
+---
+payload]]>
+                        </ee:set-payload>
+                    </ee:message>
+                </ee:transform>
+            </route>
+            <route>
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload>
+                            <![CDATA[%dw 2.0
+output application/json
+---
+payload]]>
+                        </ee:set-payload>
+                    </ee:message>
+                </ee:transform>
+            </route>
+            <route>
+                <try doc:name="Try" doc:id="22dd75a5-7853-42ed-8bd3-fe9ead0b3a26" >
+					<flow-ref doc:id="bbffb8b6-6422-4d00-9aad-aafcd7469b27" doc:name="Get OrderId" name="getOrderId" />
+					<error-handler >
+						<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="05656330-a2ec-427b-a9a0-227b230eb383" type="DB:BAD_SQL_SYNTAX, DB:CONNECTIVITY, DB:QUERY_EXECUTION">
+							<logger level="INFO" doc:name="Logger" doc:id="4d3f6b4c-e70d-4ede-a95e-dec339c8cf50" message="#[{&#10;	message: error.description&#10;}]"/>
+						</on-error-continue>
+						<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="5d5769dd-cd31-4f88-8480-75fd2e11e386" type="ANY">
+							<logger level="INFO" doc:name="Logger" doc:id="eda070a7-a206-4016-b51e-4a337fffbedb" message="#[error.description]"/>
+						</on-error-continue>
+					</error-handler>
+				</try>
+            </route>
+        </scatter-gather>
+        <ee:transform doc:id="09795115-63c2-4d31-9a09-5a7340859a35">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	orderId: payload."2".payload.orderId,
+	movieName: payload."1".payload.movieName,
+	language: payload."1".payload.language,
+	format: payload."1".payload.format,
+	date: payload."1".payload.date,
+	timeSlot: payload."1".payload.timeSlot,
+	seats: payload."1".payload.seats,
+	price: payload."1".payload.price,
+	discount: payload."1".payload.discount,
+	totalAmount: payload."1".payload.totalAmount,
+	paymentStatus: 'PAID'
+}]]>
+                </ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <logger doc:id="40a97b32-c730-46f5-97e0-c168b176cb8a" doc:name="Logger" level="INFO" message="#[payload]"/>
+        <ee:transform>
+            <ee:message>
+                <ee:set-payload>
+                    <![CDATA[%dw 2.0
+output application/java
+ns soap http://schemas.xmlsoap.org/soap/envelope
+---
+{
+    body: {
+       'eTicket': payload
+    } write "application/xml"
+}]]>
+                </ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="79390891-d77b-494c-aa7a-3a28fd747828" type="ANY">
+				<set-payload value="#['Something went wrong.Please contact support team']" doc:name="Set Payload" doc:id="d93da067-ed6c-42fb-9509-ead95ae05f66" />
+				<ee:transform doc:name="Transform Message" doc:id="1634d566-d497-494e-8b50-30eae7f7b4bf" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: payload
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="6bc24f7d-3dac-4f81-812a-c1857d850908" message="#[{&#10;	message: error.description&#10;}]"/>
+			</on-error-continue>
+		</error-handler>
+    </flow>
+    <flow doc:id="a8a3b198-d3c7-4920-bef3-520f3c6d813a" name="getOrderId">
+        <try doc:name="Try" doc:id="7a46ffa7-70c9-4cbb-b714-5d3dfc25e686" >
+			<db:select config-ref="Database_Config" doc:id="e82f5f72-63b3-45ec-a297-3d88b01765c3" doc:name="Select">
+            <db:sql>SELECT * FROM bookmyshow.orders WHERE orderId=(SELECT MAX(orderId) FROM bookmyshow.orders)</db:sql>
+        </db:select>
+			<error-handler>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="b16bbcc3-d8b4-4956-bd28-7d6540ff880c" type="ANY">
+					<logger level="INFO" doc:name="Logger" doc:id="0b2a3981-1f32-4a76-9b3e-3ae0fb1d76b7" message="#[error.description]"/>
+				</on-error-continue>
+			</error-handler>
+		</try>
+        <ee:transform doc:id="824919a7-302a-444e-80f8-425b9ad32990">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+
+---
+{
+	orderId: payload.orderId[0]
+}]]>
+                </ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="ca4ea645-65fa-4fc6-84eb-40e0d1721b7b" >
+				<logger level="INFO" doc:name="Logger" doc:id="4c10bd45-5a79-4e34-b382-f07b770dab36" message="#[error.description]"/>
+			</on-error-continue>
+		</error-handler>
+    </flow>
+    <flow doc:id="e48501d4-c36f-4688-8391-d32f5f4d15af" name="updateSeats">
+        <ee:transform>
+            <ee:message>
+                <ee:set-payload>
+                    <![CDATA[%dw 2.0
+output application/json
+---
+payload]]>
+                </ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <set-variable doc:id="7783246a-4c01-4adf-a80f-58c4663969b9" doc:name="Set Variable" value="#[{ &#10; movieName: payload.movieName, &#10; seats: payload.seats as Number &#10;}]" variableName="seatDetails"/>
+        <try doc:name="Try" doc:id="2945e0a6-7626-4952-83de-0def0775fc18" >
+			<db:select config-ref="Database_Config" doc:id="ee4fffdc-83d1-452d-b03f-570da3ffd810" doc:name="Select">
+            <db:sql>SELECT availableSeats FROM movies WHERE movieName=:movieName</db:sql>
+            <db:input-parameters>#[{
+	movieName: vars.seatDetails.movieName
+}]</db:input-parameters>
+        </db:select>
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="4d09f048-17ca-4ae7-a819-b09fbfec264b" type="DB:BAD_SQL_SYNTAX, DB:CONNECTIVITY, DB:QUERY_EXECUTION">
+					<ee:transform doc:name="Transform Message" doc:id="c9cd1df8-4615-4185-8675-032319595274" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: 'Error occurred',
+	errorMessage: error.description,
+	availableSeats: []
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+					<logger level="INFO" doc:name="Logger" doc:id="cc93ee76-c636-4b2a-8a2d-7730ba495f27" message="#[error.description]"/>
+				</on-error-propagate>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="c138e5e6-a0eb-4618-8e52-63fddfeb993e" type="ANY">
+					<ee:transform doc:name="Transform Message" doc:id="a6387f1e-2c2d-41d2-9b1f-52c771f640cb" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	message: 'Error occurred',
+	errorMessage: error.description,
+	availableSeats: []
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</on-error-continue>
+			</error-handler>
+		</try>
+        <choice doc:name="Choice" doc:id="b06d03a6-1a18-45c6-b19a-4727d2f89bbb" >
+			<when expression="#[(payload.availableSeats != null)]">
+				<ee:transform>
+            <ee:message>
+                <ee:set-payload>
+                    <![CDATA[%dw 2.0
+var availableSeats = payload.availableSeats[0]
+var seats = vars.seatDetails.seats
+output application/json
+---
+{
+	availableSeats: (availableSeats - seats)
+}]]>
+                </ee:set-payload>
+            </ee:message>
+        </ee:transform>
+				<try doc:name="Try" doc:id="7f1d3e6e-e5ec-497b-9674-a357b581b58c">
+			<db:update config-ref="Database_Config" doc:id="054a0f56-7a1e-4945-a293-c3904c97c14a" doc:name="Update">
+            <db:sql>UPDATE movies SET availableSeats= :availableSeats WHERE movieName=:movieName</db:sql>
+            <db:input-parameters>#[{
+	availableSeats: payload.availableSeats,
+	movieName: vars.seatDetails.movieName
+}]</db:input-parameters>
+        </db:update>
+			<error-handler>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="3dfad0dd-09dc-4e68-b1c9-104816377daf" type="DB:BAD_SQL_SYNTAX, DB:CONNECTIVITY, DB:QUERY_EXECUTION, DB:RETRY_EXHAUSTED">
+					<ee:transform doc:name="Transform Message" doc:id="7d7cdfa2-2380-4fc5-897e-53dad82d0750">
+						<ee:message>
+							<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: 'Seats not updated',
+	errorMessage: error.description,
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+					<logger level="INFO" doc:name="Logger" doc:id="fd2c76bb-5afa-4a7d-8f30-a74972303c5d" />
+				</on-error-continue>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="8000ef07-8e5e-4959-af4c-a1f3655c222c" type="ANY">
+					<logger level="INFO" doc:name="Logger" doc:id="d0e19041-8df5-4f70-8672-cf68073c0a53" message="#[{&#10;	message: error.description&#10;}]" />
+				</on-error-continue>
+			</error-handler>
+		</try>
+			</when>
+			<otherwise >
+				<try doc:name="Try" doc:id="75270a35-07ec-4f61-b1b2-868f651ed462" >
+					<raise-error doc:name="Raise error" doc:id="eb766bbe-afb7-49e1-ba41-74cec4dee1fd" type="NOMOVIE:MOVIENOTFOUND" description="Movie Not Found" />
+					<error-handler >
+						<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="65f9b8fb-10f7-4132-8ef6-c8609d1348ac" type="ANY">
+							<ee:transform doc:name="Transform Message" doc:id="ec13a80b-0c47-4ff5-828c-031f6f28aa3a" >
+								<ee:message >
+									<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: error.description
+}]]></ee:set-payload>
+								</ee:message>
+							</ee:transform>
+							<logger level="INFO" doc:name="Logger" doc:id="0c5df486-fe90-4267-962f-c5600dcc92fa" message="#[{&#10;	message: error.description&#10;}]"/>
+						</on-error-propagate>
+					</error-handler>
+				</try>
+			</otherwise>
+		</choice>
+        <logger doc:id="037ec3f6-b02f-492a-a76b-fb863c6decda" doc:name="Logger" level="INFO" message="#[payload]"/>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="83a5e73c-9581-42b1-8559-6c7dce157fb6" type="ANY">
+				<logger level="INFO" doc:name="Logger" doc:id="dd9ee7eb-dcc3-456f-8c91-47c91575e97b" message="#[{&#10;	message: error.description&#10;}]"/>
+			</on-error-propagate>
+		</error-handler>
+    </flow>
+</mule>

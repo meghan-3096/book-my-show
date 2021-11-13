@@ -1,0 +1,29 @@
+%dw 2.0
+
+type auto_8dbfc297_2be6_4191_8299_5052386728a1_Input_Attributes = {|
+  clientCertificate?: {|
+    publicKey?: {|  |}, 
+    "type"?: String, 
+    encoded?: Binary
+  |}, 
+  headers: {|  |}, 
+  listenerPath: String, 
+  method: String, 
+  queryParams: {|
+    movieName: String, 
+    location: "Ahmedabad" | "Guwahati" | "Bengaluru" | "Kochi" | "Chandigarh" | "Pune" | "Kolkata" | "NCR" | "Mumbai" | "Hyderabad", 
+    seats: Number, 
+    timeSlot: "Afternoon" | "Evening" | "Night" | "Morning", 
+    bookingDate: String
+  |}, 
+  queryString: String, 
+  relativePath: String, 
+  remoteAddress: String, 
+  requestPath: String, 
+  requestUri: String, 
+  scheme: String, 
+  uriParams: {|  |}, 
+  version: String, 
+  localAddress: String
+|}
+

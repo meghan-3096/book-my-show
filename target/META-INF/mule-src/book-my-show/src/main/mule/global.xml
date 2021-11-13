@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd">
+	<configuration-properties doc:name="Configuration properties" doc:id="11bf067b-f77a-4928-82fe-ad411c360391" file="config.yaml" />
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="3caf124c-0159-4276-ac74-652f721430b9" >
+		<http:listener-connection host="${http.host}" port="${http.port}"/>
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="4e68ee4d-23e2-400f-8ef4-591babd0e9b5" >
+		<db:my-sql-connection host="${sql.host}" port="${sql.port}" user="${sql.user}" password="${sql.password}" database="${sql.database}" />
+	</db:config>
+	<wsc:config name="Web_Service_Consumer_Config" doc:name="Web Service Consumer Config" doc:id="52b2b884-c35c-48d9-b075-131b13f69562" >
+		<wsc:connection wsdlLocation="api\BookMyShowOrder.wsdl" service="BookMyShowOrderService" port="BookMyShowOrderSOAPPort" address="http://localhost:8081/bookmovie" />
+	</wsc:config>
+</mule>

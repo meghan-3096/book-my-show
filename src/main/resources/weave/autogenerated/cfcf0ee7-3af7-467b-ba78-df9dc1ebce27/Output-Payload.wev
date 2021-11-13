@@ -1,0 +1,11 @@
+%dw 2.0
+
+type auto_cfcf0ee7_3af7_467b_ba78_df9dc1ebce27_Output_Payload = Array<{  duration: String,   releaseDate: String,   price: Number,   timeSlot: String,   availableSeats: Number,   book: String,   genre: Array<Any>, 
+  format: Array<Any>, 
+  movieId: Number, 
+  language: Array<Any>, 
+  movieName: String, 
+  totalSeats: Number, 
+  _?: Any
+}>
+

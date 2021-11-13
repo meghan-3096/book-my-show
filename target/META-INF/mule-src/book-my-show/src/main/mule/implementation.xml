@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<validation:config name="Validation_Config" doc:name="Validation Config" doc:id="c0bff909-434c-4b51-a9b4-c1ac70bf280a" />
+	<flow name="getMovies" doc:id="cfcf0ee7-3af7-467b-ba78-df9dc1ebce27" >
+		<try doc:name="Try" doc:id="2871acd2-8eb8-40e2-9645-c68514cea1c2" >
+			<db:select doc:name="Fetching Movies" doc:id="f50d009b-5e0b-426e-bb40-4549cd4d6c05" config-ref="Database_Config">
+			<db:sql><![CDATA[SELECT * FROM bookmyshow.Movies WHERE (location=:location AND availableSeats>0)]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+	'location': attributes.queryParams.location
+}]]]></db:input-parameters>
+		</db:select>
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e5df80fd-5cf5-431b-b61a-96b77417ddf5" type="DB:BAD_SQL_SYNTAX, DB:CONNECTIVITY, DB:QUERY_EXECUTION">
+					<set-payload value="Something went wrong. Please contact Support Team" doc:name="Error Message" doc:id="7856e4a5-c36e-4b92-8ae0-cbaac592590c" />
+					<logger level="INFO" doc:name="Logger" doc:id="2e193490-a751-4f5d-970e-cfa3a100bc99" message="#[error.description]"/>
+				</on-error-propagate>
+			</error-handler>
+		</try>
+		<ee:transform doc:name="Transform Message" doc:id="054a1e4c-22b6-4d8b-99a0-26f341702cff" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="a11ba028-0452-4546-af15-b34b0e141dbc" message="#[payload]"/>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="31296905-8e38-4d24-ae73-f969be582121" type="ANY">
+				<ee:transform doc:name="Transform Message" doc:id="b1e71d13-2078-4e22-9b71-1a528f0544cd" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/jsob
+---
+{
+	message: 'Something went wrong. Please contact support team.'
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="12abbd08-8ca8-4fcf-9d54-79c004145c1e" message="#[error.description]"/>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="getPrice" doc:id="8dbfc297-2be6-4191-8299-5052386728a1" >
+		<set-payload value="#[{&#10;	movieName: attributes.queryParams.movieName,&#10;	seats: attributes.queryParams.seats,&#10;	location: attributes.queryParams.location,&#10;	date: attributes.queryParams.bookingDate,&#10;	timeSlot: attributes.queryParams.timeSlot&#10;}]" doc:name="Set Payload" doc:id="25591ef7-94e4-4ee2-9bb0-8517deb49c0c" />
+		<try doc:name="Try" doc:id="09e2c686-b108-41b1-b540-9c8814021f1b" >
+			<flow-ref doc:name="check Seat Availability" doc:id="2ffbcd2e-029d-4943-96ac-d7e38ef75499" name="checkSeatAvailability" />
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="2178f254-a528-4663-8788-5e95d5be5b1e" >
+					<set-payload value="Something Went Wrong. Please contact support team." doc:name="Error Message" doc:id="eeb5a5fd-303d-4765-848b-0f48bcc738d0" />
+					<logger level="INFO" doc:name="Logger" doc:id="54d3a23a-1061-43ec-bb2e-f789d0ed989e" message="#[error.description]"/>
+				</on-error-propagate>
+			</error-handler>
+		</try>
+		<ee:transform doc:name="Transform Message" doc:id="66fd9763-4aeb-4414-9bd3-fec0f1c0cc19" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+var seats = (payload.seats as Number)
+var price = (150 as Number)
+output application/json
+---
+{
+	price: seats*price,
+	discount: if(seats>2) (0.05*seats*price) else (0),
+	totalAmount: if(seats>2) (seats*price - 0.05*seats*price) else (seats*price),
+	bookMovie: "http://localhost:8081/BookMyShowOrderService/BookMyShowOrderSOAPPort"
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="3e86f3bd-8d3d-4c7c-9396-e9ced0799248" message="#[payload]"/>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="e6ae426f-a8ff-4e2a-893f-d531f09f57fd" type="ANY">
+				<ee:transform doc:name="Transform Message" doc:id="e6fb0d41-2870-4802-a708-16c793c13bbd" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: error.description
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="getOrderPrice" doc:id="c1f8dce3-4b0b-4633-a742-4960bf8caf52" >
+		<ee:transform doc:name="calcualate price" doc:id="8d56b062-bcc3-4475-aef8-2a8bab619b16" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+var seats = (payload.seats as Number)
+var price = (150 as Number)
+output application/json
+---
+{
+	price: seats*price,
+	discount: if(seats>2) (0.05*seats*price) else (0),
+	totalAmount: if(seats>2) (seats*price - 0.05*seats*price) else (seats*price)
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="ac8cf76d-95ef-434c-a3b1-720a5d26ebb8" message="#[payload]"/>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="f0fd1f15-2bb0-49c2-b283-3d903182e403" type="ANY">
+				<set-payload value="Something went wrong. Please contact support team." doc:name="Set Payload" doc:id="c60b59a8-25d9-4538-a02a-81c86dedb0aa" />
+				<ee:transform doc:name="Transform Message" doc:id="4c420402-60ec-4a3d-bccd-5b0833257dc2" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="a8ce53f0-df9c-423b-a70b-f7433d26e57c" message="#[{&#10;	message: error.description&#10;}]"/>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="checkSeatAvailability" doc:id="b24fe853-b289-4974-affb-a3ac500ff868" >
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="df2ab7b9-1b46-4bf4-a61f-3fb4d5b66f84" variableName="orderDetails"/>
+		<try doc:name="Try" doc:id="381ad48d-f083-4e1e-ad58-9dbe122cbd7f" >
+			<db:select doc:name="Select" doc:id="8ad2b79d-9f66-490f-971e-66de9987c03a" config-ref="Database_Config">
+			<db:sql><![CDATA[SELECT availableSeats FROM movies WHERE (movieName=:movieName and availableSeats>0)]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+	movieName: vars.orderDetails.movieName
+}]]]></db:input-parameters>
+		</db:select>
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="8aa7c6b6-b1bb-451d-8deb-ba4bb394af9d" type="DB:BAD_SQL_SYNTAX, DB:CONNECTIVITY, DB:QUERY_EXECUTION">
+					<set-payload value="Something went wrong. Please Contact Support team." doc:name="Set Payload" doc:id="c9b1941d-3563-4e2c-8148-2da887605403" />
+					<ee:transform doc:name="Transform Message" doc:id="e89b8ab7-e620-48d0-92ff-d085df8f9cb2" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: payload
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+					<logger level="INFO" doc:name="Logger" doc:id="a87cbc44-1333-46bd-b085-a89c38dae225" message="#[{&#10;	message: error.description&#10;}]"/>
+				</on-error-propagate>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="89145ede-5f01-4fd3-8b4d-9f79b4491d85" >
+					<logger level="INFO" doc:name="Logger" doc:id="9bbc63bd-a973-4436-9fa9-ad76d5fd72ea" message="#[{&#10;	message: error.description&#10;}]"/>
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<choice doc:name="Choice" doc:id="bf8eb9c3-e4f5-4080-9935-191edfa4b9db" >
+			<when expression="#[((payload.availableSeats[0] as Number) &gt;= (vars.orderDetails.seats as Number))]">
+				<ee:transform doc:name="Transform Message" doc:id="a4d7b624-caa9-4cc8-be94-e39ce7281689" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.orderDetails]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<raise-error doc:name="Raise error" doc:id="a032aba5-f8ee-435c-ad20-e7552b2e777c" type="NOSEAT:SEATAVAILABILITYERROR" description="Not enough seats are available"/>
+			</otherwise>
+		</choice>
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="6e789e4b-8e73-49bf-ba26-eaa5f40d5560" type="ANY">
+				<ee:transform doc:name="Transform Message" doc:id="cbbbbd90-d166-4ea4-a7b2-7f6a949bdeb0" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: error.description
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[400]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+</mule>

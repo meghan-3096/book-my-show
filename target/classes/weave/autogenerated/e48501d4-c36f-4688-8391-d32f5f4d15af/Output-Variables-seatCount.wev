@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_e48501d4_c36f_4688_8391_d32f5f4d15af_Output_Variables_seatCount = Any
+
