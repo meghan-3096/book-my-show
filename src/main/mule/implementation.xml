@@ -12,7 +12,7 @@ http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mu
 	<flow name="getMovies" doc:id="cfcf0ee7-3af7-467b-ba78-df9dc1ebce27" >
 		<try doc:name="Try" doc:id="2871acd2-8eb8-40e2-9645-c68514cea1c2" >
 			<db:select doc:name="Fetching Movies" doc:id="f50d009b-5e0b-426e-bb40-4549cd4d6c05" config-ref="Database_Config">
-			<db:sql><![CDATA[SELECT * FROM bookmyshow.Movies WHERE (location=:location AND availableSeats>0)]]></db:sql>
+			<db:sql><![CDATA[SELECT * FROM bookmyshow.Movies WHERE (location=:location)]]></db:sql>
 			<db:input-parameters><![CDATA[#[{
 	'location': attributes.queryParams.location
 }]]]></db:input-parameters>

@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="BookMyShowOrder-suite.xml" />
+	<munit:test name="PostOrder:\soapkit-config-test" doc:id="181a8fad-3ccc-4442-b4ad-8496f620ee2c" >
+		<munit:behavior >
+			<munit-tools:spy doc:name="Spy Get Order Price" doc:id="b156b2d4-77cc-4c3b-ab27-a512de19bf67" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="4d05619e-0085-41f3-ad54-eacdff9c7474" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="803b2444-f024-449c-adec-ed443312de58" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import PostOrdersoapkitconfigtest::spy_assert_payload
+---
+spy_assert_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="1d6d633e-e127-4dcc-80a1-c7b5194aec94" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import PostOrdersoapkitconfigtest::spy_assert_payload1
+---
+spy_assert_payload1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit-tools:spy doc:name="Spy Update Seats" doc:id="8fdf42a6-784e-4b07-bfc6-d580c2dd5de0" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="3bcdc9e4-0fa7-4eb1-ac01-0bd290236c34" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="f3b1c236-8279-45e9-9546-4deb4e11b15f" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import PostOrdersoapkitconfigtest::spy_assert_payload2
+---
+spy_assert_payload2::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="f43d93f5-1459-4117-868a-1bf2ef6a7a41" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import PostOrdersoapkitconfigtest::spy_assert_payload3
+---
+spy_assert_payload3::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit-tools:spy doc:name="Spy Insert" doc:id="ea454afb-05d2-4484-9937-ad476c59c8f3" processor="db:insert">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="355938fe-ed15-4275-881f-e43a4741261e" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="254176f6-7617-4363-a564-be3d9c884335" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import PostOrdersoapkitconfigtest::spy_assert_payload4
+---
+spy_assert_payload4::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="bb4185ff-96fb-42b8-9821-e95c41f33db4" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import PostOrdersoapkitconfigtest::spy_assert_payload5
+---
+spy_assert_payload5::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit-tools:spy doc:name="Spy Get OrderId" doc:id="703f0c7f-6d54-424c-9e7e-17d43e3968d2" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="bbffb8b6-6422-4d00-9aad-aafcd7469b27" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="f7c39860-7424-4f11-aaa8-2e8bb2bd6c3f" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import PostOrdersoapkitconfigtest::spy_assert_payload6
+---
+spy_assert_payload6::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+					<munit-tools:assert doc:name="Assert variables" doc:id="bb54b9ec-db28-4fe3-97d9-cf0a06d4ef5f" message="The variables do not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import PostOrdersoapkitconfigtest::spy_assert_variables
+---
+spy_assert_variables::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="4d07b088-98e1-4de7-8213-2be192f4ea01" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import PostOrdersoapkitconfigtest::spy_assert_payload7
+---
+spy_assert_payload7::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+					<munit-tools:assert doc:name="Assert variables" doc:id="f1e0bb13-681e-49fe-8aeb-a744f6a0c1ab" message="The variables do not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import PostOrdersoapkitconfigtest::spy_assert_variables1
+---
+spy_assert_variables1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit:set-event doc:name="Set Input" doc:id="3c02cc07-b6e6-4fa2-b5da-3759843361f5" >
+				<munit:payload value="#[output application/java --- readUrl('classpath://PostOrdersoapkitconfigtest\set-event_payload.dwl')]" mediaType="application/java" />
+				<munit:attributes value="#[output application/java --- readUrl('classpath://PostOrdersoapkitconfigtest\set-event_attributes.dwl')]" mediaType="application/java" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to PostOrder:\soapkit-config" doc:id="2216fc3a-d7bb-44df-8028-24e559d65a65" name="PostOrder:\soapkit-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="47bd19a9-5c55-4c59-acd7-28d919e76ac5" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import PostOrdersoapkitconfigtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="45ce9e5a-b080-4a49-90c2-8288d0e35804" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="a99e47d0-2dc3-45e6-bbc7-6242819a121a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="34d79d79-1a4b-4913-aad4-38d79a287fa9" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="9d31bba5-3418-4ccf-935e-6b6c06aecf5c" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="422e5c21-0ecf-438e-a510-593ed2d3af9f" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="5611427f-aaac-4d21-9587-2bb4a229ec52" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="e7a35853-3214-48e1-b649-8e5ecbfc11fe" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="bf2f0e5f-2742-4126-bd03-9a7d422d1c20" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="c8fd9ddc-45a8-4274-b866-86e22e84f4f3" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="09795115-63c2-4d31-9a09-5a7340859a35" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="c10b35ff-f675-4933-b48d-6bf4337967ac" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="23d0c809-dea5-4b3b-bbdf-b466879dca47" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="a28d67b9-21b7-486c-91e0-8aef32561261" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="4cdd194f-598f-432e-b2b8-1da27711ccfa" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="eaa6b807-4804-428a-8cc2-9de9f9517c96" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="40a97b32-c730-46f5-97e0-c168b176cb8a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="59971e28-708a-4b2c-b148-646089336d74" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="85ab0fd4-5929-45ba-9a48-ff61d61efd97" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Get Order Price" doc:id="6d5f8d34-944d-48d8-9164-1c92df261f9a" processor="flow-ref" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="4d05619e-0085-41f3-ad54-eacdff9c7474" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Update Seats" doc:id="dd96624f-4469-4c5a-85e7-f310bd38c398" processor="flow-ref" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="3bcdc9e4-0fa7-4eb1-ac01-0bd290236c34" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Insert" doc:id="be184fcd-a966-4f39-9edd-870bbb1f7472" processor="db:insert" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="355938fe-ed15-4275-881f-e43a4741261e" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Get OrderId" doc:id="e5bdfa3f-818a-4610-8638-d50bb02f1e69" processor="flow-ref" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="bbffb8b6-6422-4d00-9aad-aafcd7469b27" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="getOrderId-test" doc:id="c767c6ba-6d8c-4b12-b82c-22a95c4f3830" >
+		<munit:behavior >
+			<munit-tools:spy doc:name="Spy Select" doc:id="3a840df2-8d10-47e3-95fc-43a03f1f6d92" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="e82f5f72-63b3-45ec-a297-3d88b01765c3" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="17da5d48-9e49-4be3-bb5c-36d1968f1560" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import getOrderIdtest::spy_assert_payload
+---
+spy_assert_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="3b6a872a-9861-4cd4-b2ba-c19c1601ab96" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import getOrderIdtest::spy_assert_payload1
+---
+spy_assert_payload1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit:set-event doc:name="Set Input" doc:id="5ede8e59-3c40-4158-b991-e277b02fcec8" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://getOrderIdtest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:variables >
+					<munit:variable key="seatDetails" value="#[output application/json --- readUrl('classpath://getOrderIdtest\set-event_variable_.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getOrderId" doc:id="0bdcc50f-eee8-41a7-8198-a9bd28476bcd" name="getOrderId"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="af430b0f-5c70-4dec-9f44-5ae3d5c66759" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import getOrderIdtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="a9e985fa-4eb5-488a-9e33-fcda344a703f" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="824919a7-302a-444e-80f8-425b9ad32990" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Select" doc:id="8c7646c2-1bca-4b69-baa2-d503d049f8e9" processor="db:select" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="e82f5f72-63b3-45ec-a297-3d88b01765c3" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="PostOrder:\soapkit-config-test1" doc:id="42e1202b-3b7e-48cd-8e5a-e91679740bee" >
+		<munit:behavior >
+			<munit-tools:spy doc:name="Spy Get Order Price" doc:id="04836bb0-ba54-44c4-9ab4-62f43305ff24" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="4d05619e-0085-41f3-ad54-eacdff9c7474" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="835defc5-0cf9-437b-a6f4-293907b20b02" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import PostOrdersoapkitconfigtest1::spy_assert_payload
+---
+spy_assert_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="a7db5d0d-80a4-46bb-960a-725dfef7a92a" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import PostOrdersoapkitconfigtest1::spy_assert_payload1
+---
+spy_assert_payload1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit-tools:spy doc:name="Spy Update Seats" doc:id="f023db94-92bd-4a3e-afee-71123c0e2275" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="3bcdc9e4-0fa7-4eb1-ac01-0bd290236c34" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="2870ea18-45d9-4bf1-b2aa-aa973da79da5" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import PostOrdersoapkitconfigtest1::spy_assert_payload2
+---
+spy_assert_payload2::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="16921a53-089c-46b7-baa5-4c8992b33cf9" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import PostOrdersoapkitconfigtest1::spy_assert_payload3
+---
+spy_assert_payload3::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit-tools:spy doc:name="Spy Insert" doc:id="3f9cc844-06be-4591-aff5-4ebe4eb32161" processor="db:insert">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="355938fe-ed15-4275-881f-e43a4741261e" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="5594cad0-b1f1-495e-88ad-be544d5044c1" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import PostOrdersoapkitconfigtest1::spy_assert_payload4
+---
+spy_assert_payload4::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="13d3e2e3-cf61-4aa6-85a4-f1b931262a39" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import PostOrdersoapkitconfigtest1::spy_assert_payload5
+---
+spy_assert_payload5::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit-tools:spy doc:name="Spy Get OrderId" doc:id="20bbbabf-2fd4-462a-ac04-bfba8e4401a2" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="bbffb8b6-6422-4d00-9aad-aafcd7469b27" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="fe420e51-e204-47e3-86e9-86a2f4abf7e6" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import PostOrdersoapkitconfigtest1::spy_assert_payload6
+---
+spy_assert_payload6::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="3d7ff188-96e9-4309-8e32-8629252485bc" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import PostOrdersoapkitconfigtest1::spy_assert_payload7
+---
+spy_assert_payload7::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit:set-event doc:name="Set Input" doc:id="17bbeb16-f9c8-4ffb-aa6f-148b11a553bc" >
+				<munit:payload value="#[output application/java --- readUrl('classpath://PostOrdersoapkitconfigtest1\set-event_payload.dwl')]" mediaType="application/java" />
+				<munit:attributes value="#[output application/java --- readUrl('classpath://PostOrdersoapkitconfigtest1\set-event_attributes.dwl')]" mediaType="application/java" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to PostOrder:\soapkit-config" doc:id="53a40cb7-dea1-45b9-8471-bace2a098c63" name="PostOrder:\soapkit-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="465f8d89-259d-4695-8c50-99d01d802898" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import PostOrdersoapkitconfigtest1::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="08617f6e-15ee-4e50-a67f-76da5e8b5bd6" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="a99e47d0-2dc3-45e6-bbc7-6242819a121a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="e1547658-50ee-43d4-9d13-0c6c0d0cb196" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="9d31bba5-3418-4ccf-935e-6b6c06aecf5c" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="d3b9e390-d611-4917-8fa9-47b61ca510d8" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="5611427f-aaac-4d21-9587-2bb4a229ec52" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="39b016a9-6802-4b21-a647-66cc7743f6ec" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="bf2f0e5f-2742-4126-bd03-9a7d422d1c20" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="393d856d-ce45-4655-87a3-2c7eb471012e" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="09795115-63c2-4d31-9a09-5a7340859a35" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="29fa2380-1179-4fe3-be6f-ef505d2fbbde" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="23d0c809-dea5-4b3b-bbdf-b466879dca47" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="762ea8bf-b648-4156-8a8b-4402130b2cae" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="4cdd194f-598f-432e-b2b8-1da27711ccfa" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="d15a3d8b-e800-4ae0-be0c-35c8848056b9" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="40a97b32-c730-46f5-97e0-c168b176cb8a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="37a97c8c-3241-40a5-a77a-f6c6d4549a07" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="85ab0fd4-5929-45ba-9a48-ff61d61efd97" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Get Order Price" doc:id="4c6949b0-da8a-4910-ae40-ebb1f2842383" processor="flow-ref" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="4d05619e-0085-41f3-ad54-eacdff9c7474" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Update Seats" doc:id="5f30b2ef-8c4e-42ca-b9d4-c638610ee811" processor="flow-ref" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="3bcdc9e4-0fa7-4eb1-ac01-0bd290236c34" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Insert" doc:id="261c09cb-7c63-4329-b2ce-5d1aadf6ddb0" processor="db:insert" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="355938fe-ed15-4275-881f-e43a4741261e" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Get OrderId" doc:id="c8f57231-5fb9-4877-b6f9-0b58450b1bc8" processor="flow-ref" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="bbffb8b6-6422-4d00-9aad-aafcd7469b27" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="api-main-test" doc:id="0ba71102-cd36-4cad-baf8-d225730a92d8" >
+		<munit:behavior >
+			<munit-tools:spy doc:name="Spy SOAP Router" doc:id="efba6511-6cfd-44c6-a433-982e2d2c2f74" processor="apikit-soap:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="7e9ad6ff-d540-48a3-8bff-8b472d9aa6b0" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="e9822ea5-c2a0-4bbf-9c84-983894c82eea" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import apimaintest::spy_assert_payload
+---
+spy_assert_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="daf32e89-5cbc-4a91-ba33-e6906961f6be" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import apimaintest::spy_assert_payload1
+---
+spy_assert_payload1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit:set-event doc:name="Set Input" doc:id="c67e4383-e546-45ff-9b70-86c00c396b88" >
+				<munit:payload value="#[output text/xml --- readUrl('classpath://apimaintest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="text/xml" />
+				<munit:attributes value="#[readUrl('classpath://apimaintest\set-event_attributes.dwl')]" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to api-main" doc:id="fa1142e8-a367-432e-8d08-7f9783afa55d" name="api-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="c4eb4871-a900-41fd-b239-d2f6b6eb4ca3" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import apimaintest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify SOAP Router" doc:id="8e9ec4e1-c972-4d80-87a1-2954d2896fe0" processor="apikit-soap:router" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="7e9ad6ff-d540-48a3-8bff-8b472d9aa6b0" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

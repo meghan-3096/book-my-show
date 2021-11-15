@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="implementation-suite.xml" />
+	<munit:test name="getMovies-test" doc:id="8799cd38-19aa-46a9-86c3-435e8dc9057c" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Fetching Movies" doc:id="be7eb38e-bf35-47bc-ac68-9217148a0ba4" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="f50d009b-5e0b-426e-bb40-4549cd4d6c05" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://getMoviestest\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://getMoviestest\mock_variable_.dwl')]" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="064ece0f-a909-4c85-b14d-f21b2e386c21" >
+				<munit:payload value="#[readUrl('classpath://getMoviestest\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://getMoviestest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://getMoviestest\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getMovies" doc:id="d4eb7f37-0d54-4166-8d28-212e77dc16ec" name="getMovies"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="276133ee-6aaf-4c54-9c2e-aa0f5c409ca5" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import getMoviestest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="4001d4e4-1baf-4027-8632-fb9a45992137" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="a11ba028-0452-4546-af15-b34b0e141dbc" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="6f18e92c-5eac-4bf1-b15a-4461d0bfa7ad" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="054a1e4c-22b6-4d8b-99a0-26f341702cff" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="getMovies-test1" doc:id="00825204-0272-410a-803c-6490cb6f968b" >
+		<munit:behavior >
+			<munit-tools:spy doc:name="Spy Fetching Movies" doc:id="9eea54c2-4376-46a3-b46a-343d7fcc8e86" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="f50d009b-5e0b-426e-bb40-4549cd4d6c05" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="157b8050-1f48-460e-8505-b0842eb6b5ec" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import getMoviestest1::spy_assert_payload
+---
+spy_assert_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="23629e34-5a81-44cc-b3c8-a72e2e249d97" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import getMoviestest1::spy_assert_payload1
+---
+spy_assert_payload1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit:set-event doc:name="Set Input" doc:id="77058db6-f706-4611-9709-ea683c77e27b" >
+				<munit:payload value="#[readUrl('classpath://getMoviestest1\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://getMoviestest1\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://getMoviestest1\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getMovies" doc:id="bd37348f-8554-4900-8f25-a570a132ed73" name="getMovies"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="0ff47b73-dbcd-482e-a11d-05fad58fdd8a" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import getMoviestest1::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="51c4e2db-98f5-47eb-9e61-467a82a67d88" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="a11ba028-0452-4546-af15-b34b0e141dbc" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="4160d30c-93a7-47b0-99da-49a5c79f2233" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="054a1e4c-22b6-4d8b-99a0-26f341702cff" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Fetching Movies" doc:id="3c5a7146-8ed7-413d-a2a2-73e4fea7c146" processor="db:select" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="f50d009b-5e0b-426e-bb40-4549cd4d6c05" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="getPrice-test" doc:id="371e04fd-d8cb-4b31-9667-0e5cc67c220b" >
+		<munit:behavior >
+			<munit-tools:spy doc:name="Spy check Seat Availability" doc:id="a75fcc62-c8a3-4b27-bb23-5c9a111a1dab" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="2ffbcd2e-029d-4943-96ac-d7e38ef75499" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="3c777c81-b1ba-4a54-bde4-c2a445cbd6e0" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import getPricetest::spy_assert_payload
+---
+spy_assert_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="2ee7b3fc-f435-48ec-856d-77be7b35759b" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import getPricetest::spy_assert_payload1
+---
+spy_assert_payload1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit:set-event doc:name="Set Input" doc:id="8f4dcf84-9de9-407d-8225-4d2d5e902b31" >
+				<munit:payload value="#[readUrl('classpath://getPricetest\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://getPricetest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://getPricetest\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getPrice" doc:id="7da54c8a-8c4e-4a7a-8bb5-45422d4322ba" name="getPrice"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="8fedc9a8-f9e3-4938-9546-6bd39c562a85" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import getPricetest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="75897eee-dc37-4797-8a36-b8a0c17317f2" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="66fd9763-4aeb-4414-9bd3-fec0f1c0cc19" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="df6a4741-ae35-4cfc-8116-ede406276f7d" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="3e86f3bd-8d3d-4c7c-9396-e9ced0799248" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Set Payload" doc:id="fd04c345-5efb-4d74-af50-2d55a5a97af7" processor="set-payload" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="25591ef7-94e4-4ee2-9bb0-8517deb49c0c" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify check Seat Availability" doc:id="b2f58c49-f925-4e4a-aaa3-f565c64679d8" processor="flow-ref" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="2ffbcd2e-029d-4943-96ac-d7e38ef75499" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

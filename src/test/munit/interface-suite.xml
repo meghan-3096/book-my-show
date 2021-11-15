@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="interface-suite.xml" />
+	<munit:test name="get:\movies:movie-api-config-test" doc:id="2cbcab03-c7b5-49f2-bb8d-121aee731332" >
+		<munit:behavior >
+			<munit-tools:spy doc:name="Spy Flow Reference" doc:id="8a014172-f02c-4800-81f7-bfb4690e9a78" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="7e3ab95e-8323-42c9-8597-ba03c57b2842" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="b2072a82-ea81-4f77-838e-b2078d0337ef" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import getmoviesmovieapiconfigtest::spy_assert_payload
+---
+spy_assert_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+					<munit-tools:assert doc:name="Assert attributes" doc:id="642964c2-8a19-4a9c-bdb6-f78e3b6cce9d" message="The attributes do not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import getmoviesmovieapiconfigtest::spy_assert_attributes
+---
+spy_assert_attributes::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+					<munit-tools:assert doc:name="Assert variables" doc:id="8f7057ec-2b4b-4649-8015-4dc466da75d5" message="The variables do not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import getmoviesmovieapiconfigtest::spy_assert_variables
+---
+spy_assert_variables::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="8e2b5e23-f78a-4a67-b575-c31a9d509035" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import getmoviesmovieapiconfigtest::spy_assert_payload1
+---
+spy_assert_payload1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+					<munit-tools:assert doc:name="Assert variables" doc:id="a3a7db2f-ec37-4384-a51a-d4f61c7d9a63" message="The variables do not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import getmoviesmovieapiconfigtest::spy_assert_variables1
+---
+spy_assert_variables1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit:set-event doc:name="Set Input" doc:id="bff4c295-d38b-4c80-b666-a23f8e5ce93a" >
+				<munit:payload value="#[readUrl('classpath://getmoviesmovieapiconfigtest\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://getmoviesmovieapiconfigtest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://getmoviesmovieapiconfigtest\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\movies:movie-api-config" doc:id="934882b8-767c-4ece-b2eb-bbef63f96932" name="get:\movies:movie-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="92122d18-4334-4a0a-be3b-3ea2a77e6e15" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import getmoviesmovieapiconfigtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Flow Reference" doc:id="fd885faa-6505-4890-bf7b-216e0800df1c" processor="flow-ref" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="7e3ab95e-8323-42c9-8597-ba03c57b2842" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get:\orders:movie-api-config-test" doc:id="441ee0f0-80b3-47ff-bcaf-166ebde2d6a8" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Flow Reference" doc:id="c272ce55-8a83-4170-b4f4-bf2a5a18acd8" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="abf570c3-7664-441c-beff-02bd4d3bdba7" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://getordersmovieapiconfigtest\mock_payload.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://getordersmovieapiconfigtest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="orderDetails" value="#[output application/java --- readUrl('classpath://getordersmovieapiconfigtest\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="b9eb2607-48f5-480f-a8c8-3e847e3e2be5" >
+				<munit:payload value="#[readUrl('classpath://getordersmovieapiconfigtest\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://getordersmovieapiconfigtest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://getordersmovieapiconfigtest\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\orders:movie-api-config" doc:id="b8a5bdba-c3cb-4c6a-80a0-04edc501abe3" name="get:\orders:movie-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="2d75eec5-80f3-41ea-a59e-bb150c55c592" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import getordersmovieapiconfigtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get:\orders:movie-api-config-test1" doc:id="1f2203d3-d7a3-458c-91ec-07fb667775e4" >
+		<munit:behavior >
+			<munit-tools:spy doc:name="Spy Flow Reference" doc:id="d0dc53bd-7d6b-4f7a-9c47-126a81113d7f" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="abf570c3-7664-441c-beff-02bd4d3bdba7" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="ebc8bd13-db67-447b-b457-e01753eed411" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import getordersmovieapiconfigtest1::spy_assert_payload
+---
+spy_assert_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+					<munit-tools:assert doc:name="Assert attributes" doc:id="3c4bf02e-9ebb-401e-9483-5ec9052b733a" message="The attributes do not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import getordersmovieapiconfigtest1::spy_assert_attributes
+---
+spy_assert_attributes::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+					<munit-tools:assert doc:name="Assert variables" doc:id="3897cfb8-5ec6-48de-be41-5f368dc22fa4" message="The variables do not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import getordersmovieapiconfigtest1::spy_assert_variables
+---
+spy_assert_variables::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="8e565899-6ba8-47e0-8a2b-d2aeafbed5d9" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import getordersmovieapiconfigtest1::spy_assert_payload1
+---
+spy_assert_payload1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit:set-event doc:name="Set Input" doc:id="14c4d168-f1bd-49f1-8521-a15887e6e73e" >
+				<munit:payload value="#[readUrl('classpath://getordersmovieapiconfigtest1\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://getordersmovieapiconfigtest1\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://getordersmovieapiconfigtest1\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\orders:movie-api-config" doc:id="71496778-8474-4020-8af4-6afc1ae4993e" name="get:\orders:movie-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="e9788dd5-4f13-4672-a1f0-a1850c214490" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import getordersmovieapiconfigtest1::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Flow Reference" doc:id="48b8fdc5-fb1a-4fa5-9828-250558144c02" processor="flow-ref" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="abf570c3-7664-441c-beff-02bd4d3bdba7" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get:\movies:movie-api-config-test1" doc:id="8d9d7925-16a9-4b8c-9cd6-0c7cb75b71e8" >
+		<munit:behavior >
+			<munit-tools:spy doc:name="Spy Flow Reference" doc:id="cb796d92-fda1-4cf1-bef5-334506885f0d" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="7e3ab95e-8323-42c9-8597-ba03c57b2842" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="03378849-51e9-42c4-af90-6f9dfe61fab6" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import getmoviesmovieapiconfigtest1::spy_assert_payload
+---
+spy_assert_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="43f7b055-5464-486b-a29c-8ded7ba7c035" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import getmoviesmovieapiconfigtest1::spy_assert_payload1
+---
+spy_assert_payload1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit:set-event doc:name="Set Input" doc:id="6b40f1dd-a0c1-4a00-b922-0567d9941447" >
+				<munit:payload value="#[readUrl('classpath://getmoviesmovieapiconfigtest1\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://getmoviesmovieapiconfigtest1\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://getmoviesmovieapiconfigtest1\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\movies:movie-api-config" doc:id="c249031f-9619-47ce-a659-caee8802dd60" name="get:\movies:movie-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="5daaff63-57d1-41c1-b43d-245493d39023" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import getmoviesmovieapiconfigtest1::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Flow Reference" doc:id="3c5ef8ea-e70c-4223-835f-dc0e8fd98163" processor="flow-ref" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="7e3ab95e-8323-42c9-8597-ba03c57b2842" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>
