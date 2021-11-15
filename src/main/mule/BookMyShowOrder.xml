@@ -17,7 +17,7 @@
                 </http:headers>
             </http:error-response>
         </http:listener>
-        <apikit-soap:router config-ref="soapkit-config">
+        <apikit-soap:router config-ref="soapkit-config" doc:id="7e9ad6ff-d540-48a3-8bff-8b472d9aa6b0">
             <apikit-soap:attributes><![CDATA[#[%dw 2.0
               output application/java
               ---
@@ -40,10 +40,9 @@
 		</error-handler>
     </flow>
     <flow name="PostOrder:\soapkit-config">
-        <ee:transform>
+        <ee:transform doc:id="a99e47d0-2dc3-45e6-bbc7-6242819a121a">
             <ee:message>
-                <ee:set-payload>
-                    <![CDATA[%dw 2.0
+                <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ns ns0 http://localhost:8081/
 ---
@@ -64,10 +63,9 @@ ns ns0 http://localhost:8081/
                 <flow-ref doc:id="4d05619e-0085-41f3-ad54-eacdff9c7474" doc:name="Get Order Price" name="getOrderPrice"/>
             </route>
             <route>
-                <ee:transform>
+                <ee:transform doc:id="bf2f0e5f-2742-4126-bd03-9a7d422d1c20">
                     <ee:message>
-                        <ee:set-payload>
-                            <![CDATA[%dw 2.0
+                        <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
 payload]]>
@@ -88,10 +86,9 @@ payload]]>
 				</try>
 			</route>
         </scatter-gather>
-        <ee:transform>
+        <ee:transform doc:id="5611427f-aaac-4d21-9587-2bb4a229ec52">
             <ee:message>
-                <ee:set-payload>
-                    <![CDATA[%dw 2.0
+                <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
 {
@@ -112,8 +109,8 @@ output application/json
             <route>
                 <try doc:name="Try" doc:id="0ccc1041-3d07-48aa-aa84-55d67fcc2e03" >
 					<db:insert config-ref="Database_Config" doc:id="355938fe-ed15-4275-881f-e43a4741261e" doc:name="Insert">
-                    <db:sql>INSERT INTO orders(movieName,languages,formats,bookingDate,timeSlot,seats,amountPaid,discount,paymentStatus,totalPrice) VALUES (:movieName,:language,:format,:bookingDate,:timeSlot,:seats,:amountPaid,:discount,:paymentStatus,:totalPrice)</db:sql>
-                    <db:input-parameters>#[{
+                    <db:sql><![CDATA[INSERT INTO orders(movieName,languages,format,bookingDate,timeSlot,seats,amountPaid,discount,paymentStatus,totalPrice) VALUES (:movieName,:language,:format,:bookingDate,:timeSlot,:seats,:amountPaid,:discount,:paymentStatus,:totalPrice)]]></db:sql>
+                    <db:input-parameters><![CDATA[#[{
 	'movieName': payload.movieName,
 	'language': payload.language,
 	'format': payload.format,
@@ -124,7 +121,7 @@ output application/json
 	'paymentStatus': 'PAID',
 	'discount': payload.discount,
 	'totalPrice': payload.price
-}]</db:input-parameters>
+}]]]></db:input-parameters>
                 </db:insert>
 					<error-handler >
 						<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="444977e0-7308-4c00-9003-e94920a54f97" type="DB:BAD_SQL_SYNTAX, DB:CONNECTIVITY, DB:QUERY_EXECUTION, DB:RETRY_EXHAUSTED">
@@ -147,10 +144,9 @@ output application/json
 						</on-error-continue>
 					</error-handler>
 				</try>
-                <ee:transform>
+                <ee:transform doc:id="23d0c809-dea5-4b3b-bbdf-b466879dca47">
                     <ee:message>
-                        <ee:set-payload>
-                            <![CDATA[%dw 2.0
+                        <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
 payload]]>
@@ -159,10 +155,9 @@ payload]]>
                 </ee:transform>
             </route>
             <route>
-                <ee:transform>
+                <ee:transform doc:id="85ab0fd4-5929-45ba-9a48-ff61d61efd97">
                     <ee:message>
-                        <ee:set-payload>
-                            <![CDATA[%dw 2.0
+                        <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
 payload]]>
@@ -206,10 +201,9 @@ output application/json
             </ee:message>
         </ee:transform>
         <logger doc:id="40a97b32-c730-46f5-97e0-c168b176cb8a" doc:name="Logger" level="INFO" message="#[payload]"/>
-        <ee:transform>
+        <ee:transform doc:id="4cdd194f-598f-432e-b2b8-1da27711ccfa">
             <ee:message>
-                <ee:set-payload>
-                    <![CDATA[%dw 2.0
+                <ee:set-payload><![CDATA[%dw 2.0
 output application/java
 ns soap http://schemas.xmlsoap.org/soap/envelope
 ---

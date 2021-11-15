@@ -3,9 +3,9 @@ http:
   port: "8081"
 
 sql:
-  host: "localhost"
+  host: "35.154.159.2"
   port: "3306"
-  user: "megha"
-  password: "Lumos@0921"
+  user: "test"
+  password: "password"
   database: "bookmyshow"
   
